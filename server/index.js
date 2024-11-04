@@ -1,12 +1,13 @@
 // initialise an Express server
-const express = require('express');
-const app = express();
-const server = require('http').Server(app);
-const config = require('./config');
-const { videoToken } = require('./tokens');
-const { socketIOServer } = require('./socket');
-const cors = require('cors');
+import express from 'express';
+import http from 'http';
+import {twilioConfig, allowedURLs} from './config.js';
+import videoToken from './tokens.js';
+import socketIOServer from './socket.js';
+import cors from 'cors';
 
+const app = express();
+const server = http.createServer(app);
 const PORT = 5100; // port on which the server runs
 const MAX_CAPACITY = 25; // maximum capacity of the room
 
@@ -16,7 +17,7 @@ app.use(
   })
 );
 
-app.use(cors({ origin: config.allowedURLs, methods: ['GET', 'POST'] }));
+app.use(cors({ origin: allowedURLs, methods: ['GET', 'POST'] }));
 app.use(express.json());
 
 const sendTokenResponse = (token, res) => {
@@ -28,19 +29,43 @@ const sendTokenResponse = (token, res) => {
   );
 };
 
+app.get('/', (req, res) => {
+  res.send('Server is up and running!');
+});
+
 // set up API routes to get access tokens from Twilio
 app.get('/video/token', (req, res) => {
   const identity = req.query.identity;
   const room = req.query.room;
-  const token = videoToken(identity, room, config);
-  sendTokenResponse(token, res);
+
+  if (!identity) {
+    return res.status(400).json({ error: 'Identity is required' });
+  }
+
+  try {
+    const token = videoToken(identity, room, twilioConfig);
+    sendTokenResponse(token, res);
+  } catch (error) {
+    console.error('Error generating token:', error);
+    res.status(500).json({ error: 'Failed to generate token' });
+  }
 });
 
 app.post('/video/token', (req, res) => {
   const identity = req.body.identity;
   const room = req.body.room;
-  const token = videoToken(identity, room, config);
-  sendTokenResponse(token, res);
+
+  if (!identity) {
+    return res.status(400).json({ error: 'Identity is required' });
+  }
+
+  try {
+    const token = videoToken(identity, room, twilioConfig);
+    sendTokenResponse(token, res);
+  } catch (error) {
+    console.error('Error generating token:', error);
+    res.status(500).json({ error: 'Failed to generate token' });
+  }
 });
 
 // run the socket.io server on the same port

@@ -1,5 +1,5 @@
-const { url } = require('./config');
-const fetch = require('node-fetch');
+import { url } from "./config.js";
+import fetch from "node-fetch";
 
 async function getChatSession(roomId) {
   // fetch the chat session from the db
@@ -28,10 +28,10 @@ async function addChatToSession(chat, roomId) {
     };
 
     await fetch(`${url.client}/api/chat-sessions`, {
-      method: 'PUT',
+      method: "PUT",
       body: JSON.stringify(reqBody),
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     });
   } catch (e) {
@@ -47,10 +47,10 @@ async function clearChatHistory(roomId) {
     };
 
     await fetch(`${url.client}/api/chat-sessions`, {
-      method: 'PUT',
+      method: "PUT",
       body: JSON.stringify(reqBody),
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     });
   } catch (e) {
@@ -84,11 +84,11 @@ async function addRoomToUser(userId, roomId) {
       rooms: stringifiedRooms,
     };
 
-    fetch(`${url.client}/api/user-rooms`, {
-      method: 'PUT',
+    await fetch(`${url.client}/api/user-rooms`, {
+      method: "PUT",
       body: JSON.stringify(reqBody),
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     });
   } catch (e) {
@@ -110,11 +110,11 @@ async function addUserToRoom(user, roomId) {
         users: stringifiedUsers,
       };
 
-      fetch(`${url.client}/api/rooms`, {
-        method: 'PUT',
+      await fetch(`${url.client}/api/rooms`, {
+        method: "PUT",
         body: JSON.stringify(reqBody),
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       });
     }
@@ -123,7 +123,7 @@ async function addUserToRoom(user, roomId) {
   }
 }
 
-module.exports = {
+export {
   getChatSession,
   addChatToSession,
   clearChatHistory,
