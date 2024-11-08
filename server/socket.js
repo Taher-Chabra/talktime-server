@@ -1,34 +1,34 @@
-import { allowedURLs } from './config.js';
-import { Server } from 'socket.io';
-import {
-  getChatSession,
-  addChatToSession,
-  clearChatHistory,
-  addRoomToUser,
-  addUserToRoom,
-} from './requests.js';
-
 function socketIOServer(server, MAX_CAPACITY) {
   // initialise a Socket.io server
-  const io = new Server(server, {
+
+  const { allowedURLs } = require('./config');
+  const io = require('socket.io')(server, {
     cors: {
       origin: allowedURLs,
     },
   });
 
+  const {
+    getChatSession,
+    addChatToSession,
+    clearChatHistory,
+    addRoomToUser,
+    addUserToRoom,
+  } = require('./requests.js');
+
   // keep track of all the rooms and the users
   const socketsInRoom = {};
   const usersInRoom = {};
 
-  io.on("connection", (socket) => {
+  io.on('connection', (socket) => {
     // join the room with the given id
-    socket.on("join-room", ({ roomId, user }) => {
+    socket.on('join-room', ({ roomId, user }) => {
       // check if user is already in the room
       if (
         socketsInRoom[roomId]?.includes(socket.id) ||
         usersInRoom[roomId]?.find((u) => u.id === user.id)
       ) {
-        socket.emit("user-already-joined");
+        socket.emit('user-already-joined');
         return;
       }
 
@@ -37,7 +37,7 @@ function socketIOServer(server, MAX_CAPACITY) {
         socketsInRoom[roomId]?.length === MAX_CAPACITY ||
         usersInRoom[roomId]?.length === MAX_CAPACITY
       ) {
-        socket.emit("room-full");
+        socket.emit('room-full');
         return;
       }
 
@@ -63,38 +63,38 @@ function socketIOServer(server, MAX_CAPACITY) {
       }
 
       getChatSession(roomId).then((chatHistory) => {
-        io.sockets.in(roomId).emit("chat-history", { chatHistory });
+        io.sockets.in(roomId).emit('chat-history', { chatHistory });
       });
 
       io.sockets
         .in(roomId)
-        .emit("updated-users-list", { usersInThisRoom: usersInRoom[roomId] });
+        .emit('updated-users-list', { usersInThisRoom: usersInRoom[roomId] });
     });
 
     // listen to incoming 'send-message' socket events
-    socket.on("send-message", ({ roomId, chat }) => {
+    socket.on('send-message', ({ roomId, chat }) => {
       addChatToSession(chat, roomId);
-      socket.to(roomId).emit("receive-message", { chat });
+      socket.to(roomId).emit('receive-message', { chat });
     });
 
     // listen to incoming 'raise-hand' socket events
-    socket.on("raise-hand", ({ userId, roomId }) => {
-      socket.to(roomId).emit("user-raised-hand", { userId });
+    socket.on('raise-hand', ({ userId, roomId }) => {
+      socket.to(roomId).emit('user-raised-hand', { userId });
     });
 
     // listen to incoming 'unraise-hand' socket events
-    socket.on("unraise-hand", ({ userId, roomId }) => {
-      socket.to(roomId).emit("user-unraised-hand", { userId });
+    socket.on('unraise-hand', ({ userId, roomId }) => {
+      socket.to(roomId).emit('user-unraised-hand', { userId });
     });
 
     // listen to incoming 'clear-chat-history' socket events
-    socket.on("clear-chat-history", ({ roomId }) => {
-      socket.to(roomId).emit("user-cleared-chat-history");
+    socket.on('clear-chat-history', ({ roomId }) => {
+      socket.to(roomId).emit('user-cleared-chat-history');
       clearChatHistory(roomId);
     });
 
     // on disconnection of the socket
-    socket.on("disconnect", () => {
+    socket.on('disconnect', () => {
       const rooms = Object.keys(socketsInRoom);
       rooms.forEach((roomId) => {
         if (socketsInRoom[roomId].includes(socket.id)) {
@@ -109,7 +109,7 @@ function socketIOServer(server, MAX_CAPACITY) {
           usersInRoom[roomId] = remainingUserObj;
 
           // send the updated users list to all the sockets in the room
-          io.sockets.in(roomId).emit("updated-users-list", {
+          io.sockets.in(roomId).emit('updated-users-list', {
             usersInThisRoom: usersInRoom[roomId],
           });
         }
@@ -118,4 +118,4 @@ function socketIOServer(server, MAX_CAPACITY) {
   });
 }
 
-export default socketIOServer;
+module.exports = { socketIOServer };

@@ -1,8 +1,8 @@
-import { url } from "./config.js";
-import fetch from "node-fetch";
+const { url } = require('./config');
+const fetch = require('node-fetch');
 
 async function getChatSession(roomId) {
-  // fetch the chat session from the db
+  // * fetch the chat session from the db
   try {
     const result = await fetch(
       `${url.client}/api/chat-sessions?roomId=${roomId}`
@@ -28,10 +28,10 @@ async function addChatToSession(chat, roomId) {
     };
 
     await fetch(`${url.client}/api/chat-sessions`, {
-      method: "PUT",
+      method: 'PUT',
       body: JSON.stringify(reqBody),
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     });
   } catch (e) {
@@ -47,10 +47,10 @@ async function clearChatHistory(roomId) {
     };
 
     await fetch(`${url.client}/api/chat-sessions`, {
-      method: "PUT",
+      method: 'PUT',
       body: JSON.stringify(reqBody),
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     });
   } catch (e) {
@@ -72,8 +72,8 @@ async function addRoomToUser(userId, roomId) {
       rooms.push({
         roomId: roomId,
         date: new Date(),
-        meetingLink: `deploy_url_link/room/${roomId}`,
-        chatLink: `deploy_url_link/room/${roomId}/chat`,
+        meetingLink: `http://localhost:3000/room/${roomId}`,
+        chatLink: `https://localhost:3000/room/${roomId}/chat`,
       });
     }
 
@@ -84,11 +84,11 @@ async function addRoomToUser(userId, roomId) {
       rooms: stringifiedRooms,
     };
 
-    await fetch(`${url.client}/api/user-rooms`, {
-      method: "PUT",
+    fetch(`${url.client}/api/user-rooms`, {
+      method: 'PUT',
       body: JSON.stringify(reqBody),
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     });
   } catch (e) {
@@ -110,11 +110,11 @@ async function addUserToRoom(user, roomId) {
         users: stringifiedUsers,
       };
 
-      await fetch(`${url.client}/api/rooms`, {
-        method: "PUT",
+      fetch(`${url.client}/api/rooms`, {
+        method: 'PUT',
         body: JSON.stringify(reqBody),
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
       });
     }
@@ -123,7 +123,7 @@ async function addUserToRoom(user, roomId) {
   }
 }
 
-export {
+module.exports = {
   getChatSession,
   addChatToSession,
   clearChatHistory,

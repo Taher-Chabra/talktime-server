@@ -1,12 +1,13 @@
-import dotenv from 'dotenv';
-dotenv.config();
+require('dotenv').config();
 
-export const twilioConfig = {
-  accountSid: process.env.TWILIO_ACCOUNT_SID,
-  apiKey: process.env.TWILIO_API_KEY,
-  apiSecret: process.env.TWILIO_API_SECRET,
+module.exports = {
+  twilio: {
+    accountSid: process.env.TWILIO_ACCOUNT_SID,
+    apiKey: process.env.TWILIO_API_KEY,
+    apiSecret: process.env.TWILIO_API_SECRET,
+  },
+  url: {
+    client: 'http://localhost:3000',
+  },
+  allowedURLs: ['http://localhost:3000'], //'deployed-app-url'
 };
-export const url = {
-  client: 'http://localhost:3000',
-};
-export const allowedURLs = ['http://localhost:3000', 'my_deployed_url'];
