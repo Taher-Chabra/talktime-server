@@ -5,7 +5,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon server",
-    "build": "cp server.js dist/"
+    "build": "cp -r server dist"
   },
   "repository": {
     "type": "git",
