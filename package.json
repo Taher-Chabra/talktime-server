@@ -4,7 +4,7 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server",
+    "start": "node server",
     "build": "cp -r server dist"
   },
   "repository": {
@@ -24,7 +24,6 @@
     "express": "^4.21.1",
     "http": "^0.0.1-security",
     "node-fetch": "^2.7.0",
-    "nodemon": "^3.1.7",
     "socket.io": "^4.8.1",
     "twilio": "^5.3.5"
   }
