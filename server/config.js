@@ -9,5 +9,5 @@ module.exports = {
   url: {
     client: 'http://localhost:3000',
   },
-  allowedURLs: ['http://localhost:3000'], //'deployed-app-url'
+  allowedURLs: ['http://localhost:3000', 'https://talktime-app.onrender.com'], 
 };
