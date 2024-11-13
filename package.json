@@ -4,8 +4,7 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server",
-    "build": "cp -r server dist"
+    "start": "nodemon server"
   },
   "repository": {
     "type": "git",
