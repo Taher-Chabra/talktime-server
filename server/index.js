@@ -28,6 +28,21 @@ const sendTokenResponse = (token, res) => {
   );
 };
 
+app.get('/', (req, res) => {
+  try {
+    res.status(200).json({
+      status: 'success',
+      message: 'Server is running',
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: 'Server error',
+      error: error.message
+    });
+  }
+});
+
 // set up API routes to get access tokens from Twilio
 app.get('/video/token', (req, res) => {
   const identity = req.query.identity;
