@@ -72,8 +72,8 @@ async function addRoomToUser(userId, roomId) {
       rooms.push({
         roomId: roomId,
         date: new Date(),
-        meetingLink: `https://talktime-app.onrender.com/room/${roomId}`,
-        chatLink: `https://talktime-app.onrender.com/room/${roomId}/chat`,
+        meetingLink: `https://talktime.taherchabra.tech/room/${roomId}`,
+        chatLink: `https://talktime.taherchabra.tech/room/${roomId}/chat`,
       });
     }
 

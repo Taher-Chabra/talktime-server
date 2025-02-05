@@ -45,15 +45,13 @@ app.get('/', (req, res) => {
 
 // set up API routes to get access tokens from Twilio
 app.get('/video/token', (req, res) => {
-  const identity = req.query.identity;
-  const room = req.query.room;
+  const {identity, room} = req.query;
   const token = videoToken(identity, room, config);
   sendTokenResponse(token, res);
 });
 
 app.post('/video/token', (req, res) => {
-  const identity = req.body.identity;
-  const room = req.body.room;
+  const {identity, room } = req.body;
   const token = videoToken(identity, room, config);
   sendTokenResponse(token, res);
 });

@@ -7,7 +7,8 @@ module.exports = {
     apiSecret: process.env.TWILIO_API_SECRET,
   },
   url: {
-    client: process.env.CLIENT_URL || 'http://localhost:3000',
+    client: process.env.CLIENT_URL || 'http://localhost:3000', 
+    
   },
-  allowedURLs: ['http://localhost:3000', 'https://talktime-app.onrender.com'], 
+  allowedURLs: ['http://localhost:3000', 'https://talktime.taherchabra.tech'], 
 };
